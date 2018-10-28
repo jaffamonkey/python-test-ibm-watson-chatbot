@@ -14,18 +14,15 @@
 `logs` folder hold all data related to errors
 
 ### Pre-requisistes
-To install python3 use brew (on OSX)
 ```bash
 brew update
 brew install python3
-```
-
-To install all the necessary run the following command: 
-```bash
 pip3 install -r requirements.txt
+cp config.example.conf config.conf
 ```
+_Complete the config.conf file_
 
-### Export environment variable `SPACE_ID`
+### Before running a script, assign workspace id to the environment variable `SPACE_ID`
 ```bash
 export SPACE_ID=46249c74-af5f-4c0c-9ffc-7058935d4250
 ```
