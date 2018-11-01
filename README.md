@@ -24,7 +24,7 @@ _Complete the config.conf file_
 
 ### Before running a script, assign workspace id to the environment variable `SPACE_ID`
 ```bash
-export SPACE_ID=46249c74-af5f-4c0c-9ffc-7058935d4250
+export SPACE_ID=workspace-id
 ```
 
 To get current workspace ids:
