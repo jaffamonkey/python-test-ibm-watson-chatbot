@@ -1,8 +1,8 @@
 
 ## Coverage
 
-* Get idalogs for workspace
-* Get dialogs for workspace, based on word count
+* Get intent examples for workspace
+* Get intent examples for workspace, based on word count
 * Show all intents for workspace
 * Change message string depending on value assigned to `changeType`
 * Full json reports for each intent, with response data

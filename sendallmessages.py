@@ -1,16 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# For manipulating json response data
 import json
+# For sending requests to Watson API
 import requests
+# For accessing Watson API
 import watson_developer_cloud
-import os
+# For creating new files and directories
+import os 
+# For adding small delays
 import time
-import configparser
-from logger import Logger
-from watson_developer_cloud import WatsonApiException
-from changemessage import ChangeMessageString
-from getallmessages import GetMessagesForAllIntents
+# For accessing the config files (so to avoid having credentials in the code)
+import configparser 
+# Access the customLogger class 
+from logger import Logger 
+# For accessing Watson API exception library
+from watson_developer_cloud import WatsonApiException 
+# Access custom ChangeMessageString class
+from changemessage import ChangeMessageString 
+# Access custom GetMessagesForAllIntents class
+from getallmessages import GetMessagesForAllIntents #
 
 config = configparser.ConfigParser()
 config.read('config.conf')
@@ -132,13 +142,4 @@ class SendMessages:
 GetMessagesForAllIntents.getMessagesForAllIntents()
 SendMessages('baseline').sendMessages()
 SendMessages('duplicatespaces').sendMessages()
-SendMessages('triplespaces').sendMessages()
-SendMessages('duplicatealletters').sendMessages()
-SendMessages('lowercaseall').sendMessages()
-SendMessages('uppercaseall').sendMessages()
-SendMessages('capitalizefirstletters').sendMessages()
-SendMessages('removeallpunctuation').sendMessages()
-SendMessages('removeallvowels').sendMessages()
-SendMessages('shufflelettersretainspaces').sendMessages()
-SendMessages('swapdwiths').sendMessages()
-SendMessages('swapawiths').sendMessages()
+SendMessages('swapletters', 's', 'a').sendMessages()

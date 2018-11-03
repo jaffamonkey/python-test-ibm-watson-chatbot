@@ -10,7 +10,7 @@ class ChangeMessageString:
 
 
     # Change message string, based lon the type passed to function 
-    def changeMessage(message, changeType):
+    def changeMessage(message, changeType, swapThis, withThat):
         if changeType == 'lowercaseall':
             messageString = message.lower()
             return messageString
@@ -34,6 +34,16 @@ class ChangeMessageString:
             messageString = message.translate(table)
             # messageString = re.sub(r'[AEIOU]', '', message)
             return messageString
+                elif changeType == 'repeatallcharacters':
+            n = 3
+            messageString = ''.join([char*n for char in message])
+            return messageString
+        elif changeType == 'duplicatespaces':
+            messageString = re.sub('([ ])',r'\1\1', message)
+            return messageString
+        elif changeType == 'triplespaces':
+            messageString = re.sub('([ ])',r'\1\1\1', message)
+            return messageString
         elif changeType == 'shufflelettersretainspaces':
             words = []
             for word in message.split():
@@ -45,58 +55,16 @@ class ChangeMessageString:
                 else:
                     words.append(word)
             result = ' '.join(words)
-            return result
-        elif changeType == 'swapdwiths':
-            messageString = message.replace("d", "s")
+        elif changeType == 'swapletters':
+            messageString = swapletters(message, swapThis, withThat)
             return messageString
-        elif changeType == 'swapswithd':
-            messageString = message.replace("s", "d")
-            return messageString
-        elif changeType == 'swaprwithe':
-            messageString = message.replace("r", "e")
-            return messageString
-        elif changeType == 'swaprwithr':
-            messageString = message.replace("e", "r")
-            return messageString
-        elif changeType == 'swaprwithe':
-            messageString = message.replace("ng", "n")
-            return messageString
-        elif changeType == 'swapuiwithui':
-            messageString = message.replace("ui", "iu")
-            return messageString
-        elif changeType == 'swapktwithk':
-            messageString = message.replace("kt", "k")
-            return messageString
-        elif changeType == 'duplicatespaces':
-            messageString = re.sub('([ ])',r'\1\1', message)
-            return messageString
-        elif changeType == 'triplespaces':
-            messageString = re.sub('([ ])',r'\1\1\1', message)
-            return messageString
-        elif changeType == 'swapoewitheo':
-            messageString = message.replace("oe", "eo")
-            return messageString
-        elif changeType == 'swapdwithdt':
-            messageString = message.replace("d", "dt")
-            return messageString
-        elif changeType == 'swapeuwithue':
-            messageString = message.replace("eu", "ue")
-            return messageString
-        elif changeType == 'swapoiwithio':
-            messageString = message.replace("oi", "io")
-            return messageString
-        elif changeType == 'swapawiths':
-            messageString = message.replace("a", "s")
-            return messageString
-        elif changeType == 'swapswitha':
-            messageString = message.replace("s", "a")
-            return messageString
-        elif changeType == 'repeatallcharacters':
-            n = 3
-            messageString = ''.join([char*n for char in message])
-            return messageString
-        else:
+        else 
             return message
+
+    def swapLetters(message, swapThis, withThat):
+        messageString = message.replace(swapThis, withThat)
+        return messageString
+
 
     def garble_word(match):
         first, middle, last = match.groups()
