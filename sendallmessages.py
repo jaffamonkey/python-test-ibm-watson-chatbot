@@ -33,10 +33,10 @@ class SendMessages:
         time.sleep(5)
         if space_id == None:
             exit("Missing environment variable: SPACE_ID")
-        if not os.path.exists('logs/'):
-            os.makedirs('logs')    
-        if not os.path.exists('report'):
-            os.makedirs('report') 
+        if not os.path.exists('logs/' + space_id):
+            os.makedirs('logs/' + space_id)    
+        if not os.path.exists('report/' + space_id):
+            os.makedirs('report/' + space_id)   
         
         # Loop round each filename in directory
         
@@ -52,8 +52,7 @@ class SendMessages:
             # Open file and read line by line
 
             with open(directory + filename) as fp:
-                line = fp.readline()
-                cnt = -1
+                cnt = 0
                 totalpass = 0
 
                 # Set watson developer cloud credentials
@@ -64,63 +63,54 @@ class SendMessages:
 
                 # Execute send message, using each line as message to send
 
-                while line:
+                for line in fp:
                     time.sleep(0.5)
-                    try:
-                        line = \
-                        ChangeMessageString.changeMessage(fp.readline(),
-                            self.changemessage)
-                        # Execute message post
+                    line = \
+                    ChangeMessageString.changeMessage(line,
+                        self.changemessage)
+                        
+                    # Set response from Watson API to be detailed
 
-                        assistant.set_detailed_response(True)
+                    assistant.set_detailed_response(True)
 
-                        # Send message to the specified workspace
+                    # Send message to the specified workspace
 
-                        response = \
-                            assistant.message(workspace_id=space_id
-                                , page_limit=1000,
-                                input={'text': line.strip()}).get_result()
-                        resp = json.dumps(response).count('intent": "'
-                                + intent + '"')
+                    response = \
+                        assistant.message(workspace_id=space_id
+                            , page_limit=1000,
+                            input={'text': line.strip()}).get_result()
+                    resp = json.dumps(response).count('intent": "'
+                            + intent + '"')
 
-                        # Return pass/failresult for matching intent
+                    # Return pass/failresult for matching intent, and add response to report
 
-                        if resp == 1:
-                            Logger.log_pass(response)
-                            f.write(json.dumps(response) + ',\n')
-                            totalpass += \
-                                json.dumps(response).count('intent": "'
-                                + intent + '"')
-                            # resp_dict = json.loads(response)
-                            # resp_dict['intents']
-                            # confidence = resp_dict['confidence']
-                            # print('Confidence level: ' + confidence)
-                            cnt += 1
-                        else:
-                            Logger.log_fail(response)
-                            f.write(json.dumps(response) + ',\n')
-                            # flog.write(json.dumps(response) + ',\n')
-                            cnt += 1
-                    except requests.exceptions.ConnectionError as ex:
+                    if resp == 1:
+                        Logger.log_pass(response)
+                        f.write(json.dumps(response) + ',\n')
+                        totalpass += \
+                            json.dumps(response).count('intent": "'
+                            + intent + '"')
+                        cnt += 1
 
-                    # Write request exseptions to log file
+                        # Extract successful intent matches that scored confidence lower than 9.8
 
-                        Logger.log_fail(str(ex))
-                        flog.write(str(ex) + ',\n')
-
-                     # Write Watson API exceptions to log file
-
-                    except WatsonApiException as err:
-                        Logger.log_fail(str(err))
-                        flog.write(str(err) + ',\n')
-                summaryline = 'total with correct intent(' + intent \
-                    + '): ' + str(totalpass) + ' from total messages: ' \
-                    + str(cnt) + '\n'
-                # print(summaryline)
+                        resp_dict = json.loads(response)
+                        resp_dict['intents']
+                        confidence = resp_dict['confidence']
+                        if confidence < 9.8:
+                            flog.write(json.dumps(response) + ',\n')
+                    else:
+                        Logger.log_fail(response)
+                        f.write(json.dumps(response) + ',\n')
+                        cnt += 1
 
                 # Write summaries of passed tests to report summary file
 
+                summaryline = space_id + ',' + intent + ',' + str(totalpass) + ',' + str(cnt) + '\n'
                 fsummary.write(summaryline)
+
+            # Close all the open files
+
             f.close()
             flog.close()
             fsummary.close()
@@ -131,14 +121,3 @@ class SendMessages:
 
 GetMessagesForAllIntents.getMessagesForAllIntents()
 SendMessages('baseline').sendMessages()
-SendMessages('duplicatespaces').sendMessages()
-SendMessages('triplespaces').sendMessages()
-SendMessages('duplicatealletters').sendMessages()
-SendMessages('lowercaseall').sendMessages()
-SendMessages('uppercaseall').sendMessages()
-SendMessages('capitalizefirstletters').sendMessages()
-SendMessages('removeallpunctuation').sendMessages()
-SendMessages('removeallvowels').sendMessages()
-SendMessages('shufflelettersretainspaces').sendMessages()
-SendMessages('swapdwiths').sendMessages()
-SendMessages('swapawiths').sendMessages()

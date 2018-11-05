@@ -31,6 +31,8 @@ class GetMessagesForAllIntents:
         
         if not os.path.exists('input'):
             os.makedirs('input')
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
         if not os.path.exists('input/' + space_id):
             os.makedirs('input/' + space_id) 
 
@@ -45,7 +47,7 @@ class GetMessagesForAllIntents:
             
             # Retrieve examples using Waston Python SDK 
             
-            flog = open('logs/importmessages-' + intent + '.log', 'a+')
+            flog = open('logs/importmessages-' + intent + '.log', 'w+')
             try:
                 assistant.set_detailed_response(True)
                 response2 = \
@@ -74,7 +76,11 @@ class GetMessagesForAllIntents:
                     1)[0].replace('@country', 'Nederland').replace(
                     '@country', 'Nederland').replace(
                     '@brand', 'Sony').replace(
-                    '@phone', 'iphone')
+                    '@phone:accessories', 'kabel').replace(
+                    '@phone', 'iphone').replace(
+                    '@family', 'family').replace(
+                    '@sys-number', '1').replace(
+                    '@guarantee', 'garantie').replace('@provider', 'Lebara')
                     
             # Write messages to input file
             
