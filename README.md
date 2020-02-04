@@ -1,4 +1,3 @@
-
 ## Coverage
 
 * Get intent examples for workspace
